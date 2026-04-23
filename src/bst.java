@@ -2,15 +2,8 @@ import java.util.Scanner;
 
 public class bst {
 
-    // Root of the family tree
     public Node root;
 
-    // Node structure
-    // Each person must store:
-    // - name
-    // - age
-    // - left child
-    // - right child
     private class Node {
         private String name;
         private int age;
@@ -27,153 +20,124 @@ public class bst {
     // ---------------------------------------------------
     // BIRTH
     // ---------------------------------------------------
-    // This part was correct in your idea:
-    // You need one public method and one recursive helper.
-    // BUT comparison must be done with AGE, not NAME.
     public void birth(String name, int age) {
         root = birth(root, name, age);
     }
 
-    private Node birth(Node x, String name, int age) {
-        // Base case:
-        // If current position is empty, create and return new node
-        if (x == null) {
+    private Node birth(Node current, String name, int age) {
+
+        // boş yere geldiysek yeni node oluştur
+        if (current == null) {
             return new Node(name, age);
         }
 
-        // Compare by AGE because BIRTH must follow BST rule by age
-        if (age < x.age) {
-            x.left = birth(x.left, name, age);
-        } else if (age > x.age) {
-            x.right = birth(x.right, name, age);
-        } else {
-            // TODO:
-            // Decide what you want to do if ages are equal.
-            // For now, you may leave it like this or ignore duplicates.
+        // yaşa göre BST yerleştirme
+        if (age < current.age) {
+            current.left = birth(current.left, name, age);
+        }
+        else if (age > current.age) {
+            current.right = birth(current.right, name, age);
+        }
+        else {
+            // TODO: aynı yaş durumu (istersen boş bırakabilirsin)
         }
 
-        return x;
+        return current;
     }
 
     // ---------------------------------------------------
     // FIND PERSON BY NAME
     // ---------------------------------------------------
-    // Important:
-    // Tree is NOT ordered by name.
-    // So you CANNOT search with compareTo like a normal BST search.
-    // You must traverse the whole tree.
     public Node findByName(String targetName) {
         return findByName(root, targetName);
     }
 
-    private Node findByName(Node x, String targetName) {
-        // TODO:
-        // 1. If x is null, return null
-        // 2. If x.name equals targetName, return x
-        // 3. Search left subtree
-        // 4. If found on left, return it
-        // 5. Otherwise search right subtree
+    private Node findByName(Node current, String targetName) {
 
-        return null; // replace this
+        // TODO:
+        // 1. current null ise return null
+        // 2. current.name equals targetName ise return current
+        // 3. solda ara
+        // 4. solda bulursan return et
+        // 5. sağda ara
+
+        return null;
     }
 
     // ---------------------------------------------------
-    // FIND PARENT BY NAME
+    // FIND PARENT
     // ---------------------------------------------------
-    // You need this for MARRIED command.
     public Node findParent(String targetName) {
         return findParent(root, targetName);
     }
 
-    private Node findParent(Node x, String targetName) {
-        // TODO:
-        // 1. If x is null, return null
-        // 2. If x.left exists and x.left.name equals targetName, return x
-        // 3. If x.right exists and x.right.name equals targetName, return x
-        // 4. Search left subtree for parent
-        // 5. If found, return it
-        // 6. Otherwise search right subtree
+    private Node findParent(Node current, String targetName) {
 
-        return null; // replace this
+        // TODO:
+        // 1. current null ise return null
+        // 2. current.left varsa ve adı eşitse return current
+        // 3. current.right varsa ve adı eşitse return current
+        // 4. solda parent ara
+        // 5. bulursan return et
+        // 6. sağda ara
+
+        return null;
     }
 
     // ---------------------------------------------------
     // MARRIED
     // ---------------------------------------------------
-    // Format: MARRIED name spouseName age
-    // Steps:
-    // 1. Find the person with given name
-    // 2. Find that person's parent
-    // 3. Insert spouse as child of that parent
-    // 4. Special case: if person is root, spouse goes to root.right if empty
     public void married(String name, String spouseName, int spouseAge) {
-        // TODO:
-        // Step 1: Find the person node
+
         Node person = findByName(name);
 
-        // If person not found, do nothing or print error
         if (person == null) {
-            // TODO: optional error handling
             return;
         }
 
-        // Step 2: Create spouse node
         Node spouse = new Node(spouseName, spouseAge);
 
-        // Step 3: Special case if person is root
+        // root special case
         if (person == root) {
             // TODO:
-            // If root.right is empty, insert spouse there
-            // Otherwise insertion fails
+            // root.right boşsa ekle
+            // değilse fail
             return;
         }
 
-        // Step 4: Find parent of the given person
         Node parent = findParent(name);
 
         if (parent == null) {
-            // TODO: optional error handling
             return;
         }
 
-        // Step 5: Insert spouse into parent's empty child
-        // Rule:
-        // if left empty -> left
-        // else if right empty -> right
-        // else insertion fails
-
         // TODO:
-        // Write the actual insertion logic here
+        // if parent.left boşsa → spouse
+        // else if parent.right boşsa → spouse
+        // else → fail
     }
 
     // ---------------------------------------------------
-    // INORDER TRAVERSAL
+    // INORDER
     // ---------------------------------------------------
-    // Output must be printed in inorder:
-    // left -> root -> right
     public void printInOrder() {
         printInOrder(root);
         System.out.println();
     }
 
-    private void printInOrder(Node x) {
-        if (x == null) {
+    private void printInOrder(Node current) {
+
+        if (current == null) {
             return;
         }
 
-        printInOrder(x.left);
+        printInOrder(current.left);
 
-        // This part is correct idea:
-        // print the current node between left and right
-        System.out.print(x.name + " ");
+        System.out.print(current.name + " ");
 
-        printInOrder(x.right);
+        printInOrder(current.right);
     }
 
-    // ---------------------------------------------------
-    // OPTIONAL HELPER
-    // ---------------------------------------------------
-    // You may use this if you want to test tree structure while debugging
     public boolean isEmpty() {
         return root == null;
     }
@@ -181,26 +145,35 @@ public class bst {
     // ---------------------------------------------------
     // MAIN
     // ---------------------------------------------------
-    // This is only the structure.
-    // You will complete input reading yourself.
-
     public static void main(String[] args) {
+
         Scanner input = new Scanner(System.in);
         bst family = new bst();
 
-        // TODO:
-        // 1. Read number of commands
-        // 2. Loop that many times
-        // 3. Read each command line
-        // 4. Split the line into parts
-        // 5. If command is BIRTH:
-        //      family.birth(name, age);
-        // 6. If command is MARRIED:
-        //      family.married(name, spouseName, age);
-        // 7. After all commands, call:
-        //      family.printInOrder();
+        int N = input.nextInt();
+        input.nextLine(); // newline temizle
 
+        for (int i = 0; i < N; i++) {
 
+            String line = input.nextLine();
+            String[] parts = line.split(" ");
+
+            String command = parts[0];
+
+            if (command.equals("BIRTH")) {
+                String name = parts[1];
+                int age = Integer.parseInt(parts[2]);
+
+                family.birth(name, age);
+            }
+            else if (command.equals("MARRIED")) {
+                String name = parts[1];
+                String spouseName = parts[2];
+                int spouseAge = Integer.parseInt(parts[3]);
+
+                family.married(name, spouseName, spouseAge);
+            }
+        }
 
         family.printInOrder();
     }
